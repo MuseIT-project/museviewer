@@ -1,0 +1,10 @@
+#title {
+            font-size: 20px;
+            font-weight: bold;
+}
+
+#jsonElements {
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            white-space: pre-wrap; /* Preserve whitespace for better readability */
+}
