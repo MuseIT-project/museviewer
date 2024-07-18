@@ -23,7 +23,9 @@ function getYouTubeVideoID(url) {
 
 // Function to process the publication data
 function processPublications(data) {
-  let publications = data["ore:describes"]['publication'];
+//  alert(data["ore:describes"]['alternativeURL']);
+//  let publications = data["ore:describes"]['publication'];
+  let publications = data["ore:describes"]['alternativeURL'];
   
   if (!publications) {
     console.error('No publication data found.');
@@ -68,9 +70,12 @@ function listElements(obj, indent = '') {
     	const params = new URLSearchParams(window.location.search);
 	const persistentId = params.get('persistentId');
         const host2 = 'https://database.sharemusic.se';
-        const host = 'https://dev.now.museum';
+        const host3 = 'https://dev.now.museum';
+        const host4 = 'https://dataverse.dev.muse-it.eu';
+        const host = 'https://dataverse.museit.exus.ai'
 	const fullURL = host + '/api/datasets/export?exporter=OAI_ORE&persistentId=' + persistentId;
         const directURL = host + '/dataset.xhtml?persistentId=' + persistentId;
+        const soundcloudURL = "https://w.soundcloud.com/player/?url=https://soundcloud.com/sharemusic-sweden/nigel-osborne-about-share";
 	console.log('Persistent ID:', persistentId);
 	fetch(fullURL)
             .then(response => {
@@ -87,16 +92,28 @@ function listElements(obj, indent = '') {
                 document.getElementById("title").textContent = title;
 		document.getElementById("description").textContent = data["ore:describes"]["citation:dsDescription"]["citation:dsDescriptionValue"];
 		document.getElementById('persistentId').innerHTML = '<a href="' + directURL + '">' + persistentId + '</a>';
-		let url = data["ore:describes"]['publication']['publicationURL']
-                let urls = processPublications(data);
+		let url = data["ore:describes"]["alternativeURL"];
+                console.error('No publication data found.' + url);
+// data["ore:describes"]['publication']['publicationURL']
+//                let urls = processPublications(data);
                 let videoId = "";
                 let youtubeId = "";
+                let europeanaId = "";
 		let urlObject = new URL(url);
-                youtubeId = getYouTubeVideoID(url);
+               youtubeId = getYouTubeVideoID(url);
 		let pathname = urlObject.pathname.split('/');
+                europeanaId = url;
+                console.error('europeana: ' + europeanaId);
 		videoId = pathname[pathname.length - 1];
                 console.log('YouTube: ', youtubeId);
-                console.log(urls);
+//                console.log(urls);
+
+                if (europeanaId)
+                {
+                   document.getElementById("europeana").src  = europeanaId;
+                   document.getElementById("soundcloud").src = "";
+                   document.getElementById("video").src = "";
+                } else { document.getElementById("europeana").src = ""; }
 
                 if (videoId) {
 		document.getElementById("video").src = "https://player.vimeo.com/video/" + videoId + "?h=97c0e1a853";
